@@ -1,0 +1,13 @@
+C:\Users\ASUS\Downloads\c#\2023091801_shammi\bin\Debug\2023091801_shammi.exe
+C:\Users\ASUS\Downloads\c#\2023091801_shammi\bin\Debug\2023091801_shammi.exe.config
+C:\Users\ASUS\Downloads\c#\2023091801_shammi\obj\Debug\2023091801_shammi.csproj.AssemblyReference.cache
+C:\Users\ASUS\Downloads\c#\2023091801_shammi\obj\Debug\_2023091801_shammi.Views.AddUserFrom.resources
+C:\Users\ASUS\Downloads\c#\2023091801_shammi\obj\Debug\_2023091801_shammi.Views.Form1.resources
+C:\Users\ASUS\Downloads\c#\2023091801_shammi\obj\Debug\_2023091801_shammi.LoginForm.resources
+C:\Users\ASUS\Downloads\c#\2023091801_shammi\obj\Debug\_2023091801_shammi.Properties.Resources.resources
+C:\Users\ASUS\Downloads\c#\2023091801_shammi\obj\Debug\_2023091801_shammi.Views.StudentRegistrationFrom.resources
+C:\Users\ASUS\Downloads\c#\2023091801_shammi\obj\Debug\2023091801_shammi.csproj.GenerateResource.cache
+C:\Users\ASUS\Downloads\c#\2023091801_shammi\obj\Debug\2023091801_shammi.csproj.CoreCompileInputs.cache
+C:\Users\ASUS\Downloads\c#\2023091801_shammi\obj\Debug\2023091801_shammi.exe
+C:\Users\ASUS\Downloads\c#\2023091801_shammi\obj\Debug\2023091801_shammi.pdb
+C:\Users\ASUS\Downloads\c#\2023091801_shammi\bin\Debug\2023091801_shammi.pdb
