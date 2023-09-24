@@ -26,13 +26,6 @@ namespace _2023091801_shammi.Views
         }
 
 
-        // Back to home page
-        private void btnExit_Click(object sender, EventArgs e)
-        {
-            // back to home page 
-            new Form1().Show();
-            this.Hide();
-        }
 
         private void label1_Click(object sender, EventArgs e)
         {
@@ -66,7 +59,7 @@ namespace _2023091801_shammi.Views
                     Boolean bl = Controller.addUser(user);
                     if (bl)
                     {
-                        MessageBox.Show("Added Successfull", "Success");
+                        MessageBox.Show("Added User Successfull", "Add User");
                         clearFeilds();
                     }
                 }
@@ -76,7 +69,7 @@ namespace _2023091801_shammi.Views
                 }
             }
             else {
-                MessageBox.Show("All feilds are required", "Error");
+                MessageBox.Show("All feilds are required", "Add User");
             }
          
         }
@@ -91,12 +84,24 @@ namespace _2023091801_shammi.Views
 
         }
 
+
+        // check input feilds
         public Boolean checkFeilds() {
             
             return txtBoxUserName.Text=="" || txtFirstName.Text=="" || txtLastName.Text=="" || txtBoxEmail.Text=="" || textBoxAddress.Text=="" || txtBoxMobileNumber.Text=="" || textBoxPassword.Text=="" ? false : true;
 
         }
 
+
+        // Back to home page
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            // back to home page 
+            new Form1().Show();
+            this.Hide();
+        }
+
+        // serch button action
         private void button1_Click(object sender, EventArgs e)
         {
             if (txtBoxUserName.Text != "")
@@ -115,16 +120,16 @@ namespace _2023091801_shammi.Views
                 }
                 else
                 {
-                    MessageBox.Show("Can't find User", "Not find");
+                    MessageBox.Show("Can't find User", "Search User");
                 }
             }
             else {
 
-                MessageBox.Show("Please input User Name","Not Find");
+                MessageBox.Show("Please input User Name", "Search User");
             }
             
         }
-
+        // btn clear
         private void btnClear_Click(object sender, EventArgs e)
         {
             clearFeilds();
@@ -147,35 +152,47 @@ namespace _2023091801_shammi.Views
         private void btnDelete_Click(object sender, EventArgs e)
         {
 
-            try {
+            // display confirmation dialog
+            DialogResult result = MessageBox.Show("Are you sure, Do you want to delete this record...?", "Delete Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-                if (searchUser != null)
+            //check user choice
+            if (result == DialogResult.Yes)
+            {
+
+                try
                 {
-                    Boolean bl = Controller.deleteUsers(searchUser.getUserName());
 
-                    if (bl)
-                    {   
-                        MessageBox.Show("Delete Successful", "DELETE");
-                        clearFeilds();
+                    if (searchUser != null)
+                    {
+                        Boolean bl = Controller.deleteUsers(searchUser.getUserName());
+
+                        if (bl)
+                        {
+                            MessageBox.Show("Record Delete Successful", "Delete User");
+                            clearFeilds();
+                        }
+                        else
+                        {
+
+                            MessageBox.Show("Not Deleted", "Delete User");
+                        }
                     }
                     else
                     {
-
-                        MessageBox.Show("Not Delete Successful", "DELETE");
+                        MessageBox.Show("Can't Find User", "Delete User");
+                        clearFeilds();
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Can't Find User", "Not Find");
-                    clearFeilds();
+
+                    MessageBox.Show("Error " + ex.Message, "Error");
                 }
-            }
-            catch(Exception ex)
-            {
-
-                MessageBox.Show("Error "+ex.Message, "Error");
+;
             }
 
+
+            
 
         }
 
@@ -192,17 +209,17 @@ namespace _2023091801_shammi.Views
                     if (x)
                     {
 
-                        MessageBox.Show("Successfully Updated", "UPDATE");
+                        MessageBox.Show("Successfully Updated", "Update User");
                         clearFeilds();
                     }
                     else {
-                        MessageBox.Show("Update Not Completed", "UPDATE");
+                        MessageBox.Show("Update Not Completed", "Update User");
                     }
 
                 }
                 else
                 {
-                    MessageBox.Show("Cont Find User ", "Not Find");
+                    MessageBox.Show("Con't Find User ", "Update User");
                 }
 
             }

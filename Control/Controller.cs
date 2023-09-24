@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using _2023091801_shammi.DBConnection;
 using _2023091801_shammi.Modal;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace _2023091801_shammi.Control
 {
@@ -21,7 +23,8 @@ namespace _2023091801_shammi.Control
         // add user details to databse
         public static Boolean addUser(User user) {
 
-            try {
+            try
+            {
 
                 // connect with database
                 sqlConnection = DBConection.getInstance().GetConnection();
@@ -36,14 +39,18 @@ namespace _2023091801_shammi.Control
                 cmd.Parameters.AddWithValue("@Address", user.getAddress());
                 cmd.Parameters.AddWithValue("@MobileNumber", user.getMobileNumber());
                 cmd.Parameters.AddWithValue("@Password", user.getPassword());
-                int x=cmd.ExecuteNonQuery();
-                sqlConnection.Close();
+                int x = cmd.ExecuteNonQuery();
+
                 return x > 0;
 
             }
-            catch (Exception ex) {
-                MessageBox.Show("Error "+ex.Message,"Error");
-            }   
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error " + ex.Message, "Error");
+            }
+            finally {
+                sqlConnection.Close();
+            }  
             return false;
         }
 
@@ -51,26 +58,31 @@ namespace _2023091801_shammi.Control
         public static Boolean checkLogin(String userName, String password) {
             try
             {
-                sqlConnection= DBConection.getInstance().GetConnection(); 
+                sqlConnection = DBConection.getInstance().GetConnection();
                 sqlConnection.Open();
                 SqlCommand cmd = new SqlCommand("SELECT *FROM logins WHERE userName=@user And password=@password", sqlConnection);
-                cmd.Parameters.AddWithValue("@user",userName);
+                cmd.Parameters.AddWithValue("@user", userName);
                 cmd.Parameters.AddWithValue("@password", password);
                 SqlDataReader sqlDataReader = cmd.ExecuteReader();
 
-                if (sqlDataReader.Read()) {
+                if (sqlDataReader.Read())
+                {
                     sqlConnection.Close();
                     return true;
                 }
                 sqlConnection.Close();
                 return false;
-                
+
             }
-            catch (Exception ex) {
-                MessageBox.Show("Error "+ex.Message,"Eroor");
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error " + ex.Message, "Eroor");
+
+            }
+            finally {
+                sqlConnection.Close();
+            }
             
-            }
-            sqlConnection.Close();
             return false;
         }
 
@@ -78,8 +90,9 @@ namespace _2023091801_shammi.Control
         public static User searchUsers(String searchId)
         {
             User user=null;
-            try {
-                SqlConnection sqlConnection = DBConection.getInstance().GetConnection();
+            try
+            {
+                sqlConnection = DBConection.getInstance().GetConnection();
                 sqlConnection.Open();
                 SqlCommand cmd = new SqlCommand("SELECT *FROM logins WHERE userName='" + searchId + "'", sqlConnection);
                 SqlDataReader dataReader = cmd.ExecuteReader();
@@ -87,18 +100,21 @@ namespace _2023091801_shammi.Control
                 while (dataReader.Read())
                 {
                     // Create user object
-                    user=new User(dataReader["userName"].ToString(), dataReader["firstName"].ToString(), dataReader["lastName"].ToString(), dataReader["email"].ToString(), dataReader["address"].ToString(),int.Parse( dataReader["mobileNumber"].ToString()), dataReader["password"].ToString());
-                    
+                    user = new User(dataReader["userName"].ToString(), dataReader["firstName"].ToString(), dataReader["lastName"].ToString(), dataReader["email"].ToString(), dataReader["address"].ToString(), int.Parse(dataReader["mobileNumber"].ToString()), dataReader["password"].ToString());
+
                 }
                 dataReader.Close();
-                sqlConnection.Close();
                 return user;
 
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error "+ex.Message,"Error");
+                MessageBox.Show("Error " + ex.Message, "Error");
 
+            }
+            finally {
+
+                sqlConnection.Close();
             }
             return null;
         }
@@ -107,19 +123,24 @@ namespace _2023091801_shammi.Control
 
         public static Boolean deleteUsers(string userName )
         {
-            try {
+            try
+            {
 
-                SqlConnection sqlConnection = DBConection.getInstance().GetConnection();
+                sqlConnection = DBConection.getInstance().GetConnection();
                 sqlConnection.Open();
                 SqlCommand cmd = new SqlCommand("DELETE FROM logins WHERE userName='" + userName + "'", sqlConnection);
                 int x = cmd.ExecuteNonQuery();
                 sqlConnection.Close();
                 return x > 0;
             }
-            catch (Exception ex) {
-                MessageBox.Show("Error"+ex.Message,"Error");
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error" + ex.Message, "Error");
             }
-            sqlConnection.Close();
+            finally {
+                sqlConnection.Close();
+            }
+            
             return false;
         }
 
@@ -127,21 +148,27 @@ namespace _2023091801_shammi.Control
         // update users
         public static Boolean updateUsers(String userName,User user)
         {
-            try { 
-                
-                SqlConnection sqlConnection= DBConection.getInstance().GetConnection(); 
-                sqlConnection.Open();
-                SqlCommand cmd = new SqlCommand("UPDATE logins SET firstName='"+user.getFirstName()+ "', lastName='"+user.getLastName()+ "', email='"+user.getEmail()+ "', address='"+user.getAddress()+ "', mobileNumber='"+user.getMobileNumber()+ "', password='"+user.getPassword()+"'", sqlConnection);
-                int x=cmd.ExecuteNonQuery();
-                sqlConnection.Close ();
-                return x > 0;
-                   
-            }catch(Exception ex) {
+            try
+            {
 
-                MessageBox.Show("Error "+ex.Message,"Error");
+                sqlConnection = DBConection.getInstance().GetConnection();
+                sqlConnection.Open();
+                SqlCommand cmd = new SqlCommand("UPDATE logins SET firstName='" + user.getFirstName() + "', lastName='" + user.getLastName() + "', email='" + user.getEmail() + "', address='" + user.getAddress() + "', mobileNumber='" + user.getMobileNumber() + "', password='" + user.getPassword() + "'", sqlConnection);
+                int x = cmd.ExecuteNonQuery();
+                sqlConnection.Close();
+                return x > 0;
+
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("Error " + ex.Message, "Error");
+            }
+            finally {
+                sqlConnection.Close();
             }
 
-            sqlConnection.Close();
+            
             return false;
         }
 
@@ -152,7 +179,7 @@ namespace _2023091801_shammi.Control
             {
 
                 //connect data base
-                SqlConnection sqlConnection = DBConection.getInstance().GetConnection();
+                sqlConnection = DBConection.getInstance().GetConnection();
                 sqlConnection.Open();
 
                 // get all rows
@@ -170,7 +197,7 @@ namespace _2023091801_shammi.Control
                     studentRegNumArray[studentRegNumArray.Length - 1] = studentRegNumber;
                 }
 
-                sqlConnection.Close();
+
                 // return last row registation number
                 return studentRegNumber;
 
@@ -181,9 +208,12 @@ namespace _2023091801_shammi.Control
                 MessageBox.Show("Error " + ex.Message, "Error");
 
             }
-          
-             sqlConnection.Close();
-            return 10000;
+            finally {
+                
+                sqlConnection.Close();
+            }
+            return 1000;
+
         }
 
         //extend studentRegNumArray array
@@ -212,11 +242,10 @@ namespace _2023091801_shammi.Control
             try
             {
                 String sql = "INSERT INTO Registration(firstName,lastName,dateOfBirth,gender,address,email,mobilePhone,homePhone,parentName,nic,contactNo) VALUES ('" + student.getFirstName() + "','" + student.getLastName() + "','" + student.getDateOfBirth() + "','" + student.getGender() + "','" + student.getAddress() + "','" + student.getEmail() + "'," + student.getMobilePhone() + "," + student.getHomePhone() + ",'" + student.getParentName() + "','" + student.getNic() + "','" + student.getContactNo() + "')";
-                SqlConnection sqlConnection = DBConection.getInstance().GetConnection();
+                sqlConnection = DBConection.getInstance().GetConnection();
                 sqlConnection.Open();
                 SqlCommand cmd = new SqlCommand(sql, sqlConnection);
                 int x = cmd.ExecuteNonQuery();
-                sqlConnection.Close();
                 return x > 0;
 
             }
@@ -235,6 +264,88 @@ namespace _2023091801_shammi.Control
             }
             return false;
         }
+
+
+        // search student
+
+        public static Student searchStudent(String regNo)
+        {
+            try
+            {
+                String sql = "SELECT *FROM Registration WHERE regNo='"+regNo+"'";
+                sqlConnection= DBConection.getInstance().GetConnection();
+                sqlConnection.Open();
+                SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection);
+                SqlDataReader dataReader = sqlCommand.ExecuteReader();
+                Student student = null;
+                while (dataReader.Read())
+                {
+                    student = new Student(int.Parse( dataReader["regNo"].ToString()), dataReader["firstName"].ToString(), dataReader["lastName"].ToString(), dataReader["dateOfBirth"].ToString(), dataReader["gender"].ToString(), dataReader["address"].ToString(), dataReader["email"].ToString(),int.Parse (dataReader["mobilePhone"].ToString()), int.Parse(dataReader["homePhone"].ToString()), dataReader["parentName"].ToString(), dataReader["nic"].ToString(), int.Parse(dataReader["contactNo"].ToString()));
+                }
+                return student;
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("Error "+ex.Message,"Error");
+            }
+            finally { 
+            
+            sqlConnection.Close() ;
+            }
+            return null;
+        
+        }
+
+
+        // delete student
+        public static Boolean deleteStudent(String regNo)
+        {
+            try
+            {
+                String sql = "DELETE FROM Registration WHERE regNo='" + regNo + "'";
+                sqlConnection = DBConection.getInstance().GetConnection();
+                sqlConnection.Open();
+                SqlCommand sqlCommand = new SqlCommand( sql, sqlConnection);
+                int x=sqlCommand.ExecuteNonQuery();
+
+                return x > 0;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error "+ex.Message,"Error");
+            }
+            finally
+            {
+                sqlConnection.Close();
+            }
+            return false;
+        }
+
+
+        // upadte student
+
+        public static Boolean updateStudent(String regNo, Student student)
+        {
+            try {
+                String sql = "UPDATE Registration SET firstName='" + student.getFirstName() + "',lastName='" + student.getLastName() + "',dateOfBirth='" + student.getDateOfBirth() + "',gender='" + student.getGender() + "',address='" + student.getAddress() + "',email='" + student.getEmail() + "',mobilePhone=" + student.getMobilePhone() + ",homePhone=" + student.getHomePhone() + ",parentName='" + student.getParentName() + "',nic='" + student.getNic() + "',contactNo='" + student.getContactNo() + "' WHERE regNo='"+regNo+"'";
+                sqlConnection = DBConection.getInstance().GetConnection();
+                sqlConnection.Open();
+                SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection);
+                int x=sqlCommand.ExecuteNonQuery();
+                return x > 0;
+            }
+            catch (Exception ex) {
+
+                MessageBox.Show("Error "+ex.Message,"Error");
+            }finally { sqlConnection.Close(); }
+
+            return false;
+        }
+
     }
 
+
+   
 }

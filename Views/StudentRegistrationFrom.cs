@@ -17,6 +17,8 @@ namespace _2023091801_shammi.Views
         private int currentStudentId;
         private int[] studentRegNumArray;
         private String txtGender;
+        private String searchId;
+        private string dateString;
         public StudentRegistrationFrom()
         {
 
@@ -58,18 +60,41 @@ namespace _2023091801_shammi.Views
 
         }
 
+        // logout button
+
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            // logout 
-            new LoginForm().Show();
-            this.Hide();
+            // display confirmation dialog
+            DialogResult result = MessageBox.Show("Are you want to Logout", "Exit Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            //check user choice
+            if (result == DialogResult.Yes)
+            {
+
+                // logout 
+                new LoginForm().Show();
+                this.Hide();
+            }
+
+
+
+            
         }
+
+        //exit button
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            // exit in the system
+            // display confirmation dialog
+            DialogResult result = MessageBox.Show("Are you want to exit", "Exit Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-            Application.Exit();
+            //check user choice
+            if (result == DialogResult.Yes)
+            {
+
+                // user click 'yes ' , so close application
+                Application.Exit();
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -127,7 +152,7 @@ namespace _2023091801_shammi.Views
 
                 if (txtFirstName.Text == "" || txtLastName.Text == "" || birthDateTimePicker1.Text == "" || txtGender == "" || txtAddress.Text == "" || txtBoxEmail.Text =="" || txtBoxMobileNumber.Text =="" || txtBoxHomeNumber.Text =="" || txtParentName.Text =="" || txtNIC.Text=="" || txtContactNumber.Text=="" ) {
 
-                    MessageBox.Show("All Feilds Are Required","Required");
+                    MessageBox.Show("All Feilds Are Required","Required...");
                 }
                 else {
                     Student student = new Student(10, txtFirstName.Text, txtLastName.Text, birthDateTimePicker1.Text, txtGender, txtAddress.Text, txtBoxEmail.Text, int.Parse(txtBoxMobileNumber.Text), int.Parse(txtBoxHomeNumber.Text), txtParentName.Text, txtNIC.Text, int.Parse(txtContactNumber.Text));
@@ -135,12 +160,13 @@ namespace _2023091801_shammi.Views
 
                     if (bl)
                     {
-                        MessageBox.Show("Successfully Added", "Success");
-                        clearFeilds();
+                        MessageBox.Show("Record Added Successfully", "Register Student");
+                        new StudentRegistrationFrom().Show();
+                        this.Hide();
                     }
                     else
                     {
-                        MessageBox.Show("Not Added", "Error");
+                        MessageBox.Show("Not Added", "Register Student");
                     }
 
                 }
@@ -153,9 +179,53 @@ namespace _2023091801_shammi.Views
 
         }
 
+
+        // student search button action
         private void regNumComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            try {
 
+                // display search result
+                if (regNumComboBox.Text != "")
+                {
+                    searchId = regNumComboBox.Text;
+                    Student student = Controller.searchStudent(searchId);
+
+                    if (student!=null) {
+                        txtFirstName.Text = student.getFirstName()+"";
+                        txtLastName.Text = student.getLastName();
+                        dateString = student.getDateOfBirth();
+
+                        birthDateTimePicker1.Value = DateTime.Parse(dateString);//get string date ada set to dateTime(type)
+                      
+                        if (student.getGender() == "Male") // set gender
+                        {
+                            btnMale.Checked = true;
+                            btnFemale.Checked = false;
+                        }
+                        else {
+                            btnFemale.Checked = true;
+                            btnMale.Checked = false;
+                        }
+                        txtBoxEmail.Text = student.getEmail();
+                        txtBoxMobileNumber.Text = student.getMobilePhone()+"";
+                        txtBoxHomeNumber.Text = student.getHomePhone()+"";
+                        txtAddress.Text = student.getAddress();
+                        txtParentName.Text = student.getParentName();
+                        txtNIC.Text = student.getNic();
+                        txtContactNumber.Text = student.getContactNo()+"";
+                    }
+                    else {
+                        MessageBox.Show("Can't Find Student","Student Search");
+                    }
+                }
+            }
+            catch (Exception ex) {
+                MessageBox.Show("Error "+ex.Message,"Error");
+            }
+           
+           
+            
         }
 
         private void label15_Click(object sender, EventArgs e)
@@ -176,6 +246,7 @@ namespace _2023091801_shammi.Views
         // clear input feilds
         private void clearFeilds()
         {
+            regNumComboBox.Text = "";
             txtFirstName.Text = "";
             txtLastName.Text = "";
             birthDateTimePicker1.Text = "";
@@ -193,6 +264,7 @@ namespace _2023091801_shammi.Views
 
         }
 
+        // get gender of student -female
         private void btnFemale_CheckedChanged(object sender, EventArgs e)
         {
             txtGender = "female";
@@ -203,9 +275,85 @@ namespace _2023091801_shammi.Views
 
         }
 
+        // get gender of student - male
         private void btnMale_CheckedChanged(object sender, EventArgs e)
         {
             txtGender = "male";
+        }
+
+
+        // delete button event
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            // display confirmation dialog
+            DialogResult result = MessageBox.Show("Are you sure, Do you want to delete this Recode..?", "Delete Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            //check user choice
+            if (result == DialogResult.Yes)
+            {
+
+                // user click 'yes ' , so delete student
+                try
+                {
+                    if (searchId != "")
+                    {
+                        Boolean bl = Controller.deleteStudent(searchId);
+                        if (bl)
+                        {
+                            MessageBox.Show("Record Delete Succesfully", "Delete Student");
+                            new StudentRegistrationFrom().Show();
+                            this.Hide();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Not Deleted", "Delete Student");
+
+                        }
+
+                    }
+                    else
+                    {
+                        MessageBox.Show("please Select Student", "Delete Student");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error" + ex.Message, "Error");
+
+                }
+            }
+
+            
+        }
+
+        // update button event
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            try {
+                if (searchId!="") {
+                    Student student = new Student(0000, txtFirstName.Text, txtLastName.Text, birthDateTimePicker1.Text, txtGender, txtAddress.Text, txtBoxEmail.Text, int.Parse(txtBoxMobileNumber.Text), int.Parse(txtBoxHomeNumber.Text), txtParentName.Text, txtNIC.Text, int.Parse(txtContactNumber.Text));
+                    Boolean bl=Controller.updateStudent(searchId,student);
+
+                    if (bl)
+                    {
+                        MessageBox.Show("Successfully Updated", "UPDATE");
+                        new StudentRegistrationFrom().Show();
+                        this.Hide();
+                    }
+                    else {
+                        MessageBox.Show("Not Updated","UPDATE");
+                    }
+                }
+                else {
+
+                    MessageBox.Show("Select Student","Not Selected");
+                }
+
+            }
+            catch (Exception ex) {
+
+                MessageBox.Show("Error "+ex.Message,"Error");
+            }
         }
     }
 }

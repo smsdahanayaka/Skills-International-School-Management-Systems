@@ -59,10 +59,10 @@ namespace _2023091801_shammi
             password=txtBoxPassword.Text;
 
             // Check all feilds are filled or not
-            if (user!="" || password!="") {
+            if (user!="" && password!="") {
 
                 // check default user and password
-                if (user == "Admin" || password == "Skill@123")
+                if (user == "Admin" && password == "Skill@123")
                 {
                     // show home page
                     new Form1().Show();
